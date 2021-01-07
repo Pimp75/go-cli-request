@@ -13,11 +13,10 @@ var (
     message map[string]interface{}
 )  
 
-func Call(method string, url string, headers map[string]string, data map[string]string) {
-    body_bytes, _ := json.Marshal(data)
-    buffered_body := bytes.NewBuffer(body_bytes)
+func Call(method string, url string, headers map[string]string, body string) {
+    body_bytes :=  []byte(body)
 
-    req, _ := http.NewRequest(method, url, buffered_body)
+    req, _ := http.NewRequest(method, url, bytes.NewBuffer(body_bytes))
 
     for key, value := range headers{
         req.Header.Add(key, value)
