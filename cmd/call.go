@@ -16,33 +16,34 @@ limitations under the License.
 package cmd
 
 import (
-	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"github.com/spf13/cobra"
 	"go-cli-request/http"
 )
 
-// getCmd represents the get command
-var getCmd = &cobra.Command{
-	Use:   "GET [url to request]",
-	Short: "Execute GET http request to a Given host",
-	Long: `Command that allows to make a GET http request
-	to the url givent in argument. Headers are 
+// callCmd represents the call command
+var callCmd = &cobra.Command{
+	Use:   "call [url to request]",
+	Short: "Execute http request with method and url givent as arguments",
+	Long: `Command that allows to make a http request, with method
+	the url given in argument. Headers and body are 
 	optional and can be added as flags.
 
-	Example: ./go-cli-request GET URL --headers "Authorization=Bearer token"
+	Example:./go-cli-request GET URL --headers "Authorization=Bearer token"
 	`,
-	Args: cobra.MinimumNArgs(1),
+	Args: cobra.MinimumNArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
-		url := args[0]
+		method := args[0]
+		url := args[1]
 
-		http.Get(url, headers)
+		http.Call(method, url, headers)
 	},
 }
-
 var headers map[string]string
 
 func init() {
-	rootCmd.AddCommand(getCmd)
-	getCmd.Flags().StringToStringVar(&headers, "headers",  map[string]string{} , "Headers for the request")
-	viper.BindPFlag("headers", getCmd.Flags().Lookup("headers"))
+	rootCmd.AddCommand(callCmd)
+
+  	callCmd.Flags().StringToStringVar(&headers, "headers",  map[string]string{} , "Headers for the request")
+  	viper.BindPFlag("headers", callCmd.Flags().Lookup("headers"))
 }
