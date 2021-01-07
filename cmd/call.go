@@ -36,14 +36,18 @@ var callCmd = &cobra.Command{
 		method := args[0]
 		url := args[1]
 
-		http.Call(method, url, headers)
+		http.Call(method, url, headers, data)
 	},
 }
 var headers map[string]string
+var data map[string]string
 
 func init() {
 	rootCmd.AddCommand(callCmd)
 
-  	callCmd.Flags().StringToStringVar(&headers, "headers",  map[string]string{} , "Headers for the request")
+	callCmd.Flags().StringToStringVar(&headers, "headers",  map[string]string{} , "Headers for the request")
   	viper.BindPFlag("headers", callCmd.Flags().Lookup("headers"))
+
+	allCmd.Flags().StringToStringVar(&data, "data",  map[string]string{} , "Headers for the request")
+	viper.BindPFlag("data", callCmd.Flags().Lookup("data"))
 }

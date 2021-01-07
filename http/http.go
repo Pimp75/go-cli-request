@@ -5,6 +5,7 @@ import (
     "fmt"	
     "log"
     "encoding/json"
+    "bytes"
 )
 
 var (
@@ -12,8 +13,11 @@ var (
     message map[string]interface{}
 )  
 
-func Call(method string, url string, headers map[string]string) {
-    req, _ := http.NewRequest(method, url, nil)
+func Call(method string, url string, headers map[string]string, data map[string]string) {
+    body_bytes, _ := json.Marshal(data)
+    buffered_body := bytes.NewBuffer(body_bytes)
+
+    req, _ := http.NewRequest(method, url, buffered_body)
 
     for key, value := range headers{
         req.Header.Add(key, value)
